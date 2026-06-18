@@ -1,0 +1,8 @@
+:root { --bg: #fff; --text: #111; --accent: #0078d4; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color: var(--text); background: var(--bg); padding: 1rem; }
+header { margin-bottom: 1rem; }
+button { background: var(--accent); color: #fff; border: none; padding: .6rem 1rem; border-radius: 6px; cursor: pointer; }
+main p { max-width: 60ch; }
+a { color: var(--accent); }
