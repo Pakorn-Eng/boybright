@@ -11,8 +11,46 @@
     <header>
       <h1>HTML5 Boilerplate</h1>
     </header>
-    <main></main>
+    <main>
+      <section>
+        <div
+          display="flex"
+          flex-direction="row"
+          justify-content="space-between"
+        >
+          <h2>Registration form</h2>
+          ชื่อจริง:
+          <input type="text" name="firstName" id="firstName" /> นามสกุล:
+          <input type="text" name="lastName" id="lastName" /> อายุ:
+          <input type="number" name="age" id="age" /> เพศ:
+          <input type="text" name="gender" id="gender" />
+          <button id="submitBtn" onclick="submitForm()">Submit</button>
+        </div>
+      </section>
+    </main>
     <script type="module" src="js/main.js" defer></script>
-    <script></script>
+    <script>
+      let submitForm = () => {
+        let firstName = document.querySelector("input[name='firstName']").value;
+        let lastName = document.querySelector("input[name='lastName']").value;
+        let age = document.querySelector("input[name='age']").value;
+        let gender = document.querySelector("input[name='gender']").value;
+
+        console.log("First Name:", firstName);
+        console.log("Last Name:", lastName);
+        console.log("Age:", age);
+        console.log("Gender:", gender);
+        let userData = {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          age: age.value,
+          gender: gender.value,
+        };
+        if (!firstName || !lastName || !age || !gender) {
+          alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+          return;
+        }
+      };
+    </script>
   </body>
 </html>
