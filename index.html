@@ -12,30 +12,23 @@
       <h1>HTML5 Boilerplate</h1>
     </header>
     <main>
-      <div class="content"></div>
-      <input type="checkbox" name="interest" value="กีฬา" />กีฬา
-      <input type="checkbox" name="interest" value="ดนตรี" />ดนตรี
-      <input type="checkbox" name="interest" value="ท่องเที่ยว" />ท่องเที่ยว
-      <input type="checkbox" name="interest" value="อ่านหนังสือ" />อ่านหนังสือ
-      <input type="checkbox" name="interest" value="เล่นเกม" />เล่นเกม
-      <button id="submitBtn" onclick="submitInterests()">Submit</button>
+      <a id="thislink" href="https://www.google.com" target="_blank">Google</a>
+      <div id="thisdiv">This is a div</div>
+      <input type="text" id="thisinput" value="Hello World" />
+      <button onclick="handleClick()" id="thisbutton">Click Me</button>
     </main>
     <script type="module" src="js/main.js" defer></script>
     <script>
-      function submitInterests() {
-        let interestsDom = document.querySelectorAll("input[name=interest]");
-        let contentHTML = "<ul>";
-        for (let i = 0; i < interestsDom.length; i++) {
-          if (interestsDom[i].checked) {
-            contentHTML += "<li>" + interestsDom[i].value + "</li>";
-            console.log(interestsDom[i].value);
-          }
-        }
-        contentHTML += "</ul>";
-        let contentDom = document.querySelector(".content");
-        contentDom.innerHTML = contentHTML;
-        console.log(contentHTML);
-      }
+      let thislinkDOM = document.getElementById("thislink");
+      let thisinputDOM = document.getElementById("thisinput");
+      let thisbuttonDOM = document.getElementById("thisbutton");
+      let thisdivDOM = document.getElementById("thisdiv");
+      let handleClick = () => {
+        console.log("Button clicked!");
+        console.log(thisinputDOM.value);
+        thisdivDOM.innerHTML = thisinputDOM.value;
+      };
+      console.log(thislinkDOM.getAttribute("href"));
     </script>
   </body>
 </html>
