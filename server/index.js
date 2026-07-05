@@ -47,6 +47,20 @@ app.patch("/user/:id", (req, res) => {
   });
 });
 
+// path delete /user/:id
+app.delete("/user/:id", (req, res) => {
+  let id = req.params.id;
+  let selectIndex = users.findIndex((user) => user.id == id);
+
+  //delete users[selectIndex]; เปลี่นเป็น splice
+  users.splice(selectIndex, 1);
+
+  res.json({
+    selectIndex: selectIndex,
+    message: "User deleted successfully",
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
