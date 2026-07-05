@@ -1,15 +1,47 @@
-console.log("Hello, World!");
-const http = require("http");
-
-const host = "localhost";
+const express = require("express");
+const app = express();
 const port = 8000;
+const bodyParser = require("body-parser");
 
-const requestListener = function (req, res) {
-  res.writeHead(200);
-  res.end("My First Server!");
-};
+app.use(bodyParser.json());
 
-const server = http.createServer(requestListener);
-server.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`);
+let users = [];
+
+let counter = 1;
+
+app.get("/users", (req, res) => {
+  res.json(users);
+});
+
+app.post("/user", (req, res) => {
+  let user = req.body;
+  user.id = counter;
+
+  counter += 1;
+  users.push(user);
+  res.json({
+    user: user,
+    message: "User added successfully",
+  });
+});
+
+// path put /user/:id
+app.put("/user/:id", (req, res) => {
+  let id = req.params.id;
+  let selectIndex = users.findIndex((user) => user.id == id);
+
+  //update user
+  let updatedUser = req.body;
+  users[selectIndex].firstname = updatedUser.firstname;
+  users[selectIndex].lastname = updatedUser.lastname;
+
+  res.json({
+    user: updatedUser,
+    selectIndex: selectIndex,
+    message: "User updated successfully",
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
