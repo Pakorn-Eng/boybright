@@ -32,8 +32,10 @@ app.put("/user/:id", (req, res) => {
 
   //update user
   let updatedUser = req.body;
-  users[selectIndex].firstname = updatedUser.firstname;
-  users[selectIndex].lastname = updatedUser.lastname;
+  users[selectIndex].firstname =
+    updatedUser.firstname || users[selectIndex].firstname;
+  users[selectIndex].lastname =
+    updatedUser.lastname || users[selectIndex].lastname;
 
   res.json({
     user: updatedUser,
