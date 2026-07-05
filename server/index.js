@@ -26,16 +26,19 @@ app.post("/user", (req, res) => {
 });
 
 // path put /user/:id
-app.put("/user/:id", (req, res) => {
+app.patch("/user/:id", (req, res) => {
   let id = req.params.id;
   let selectIndex = users.findIndex((user) => user.id == id);
 
   //update user
   let updatedUser = req.body;
-  users[selectIndex].firstname =
-    updatedUser.firstname || users[selectIndex].firstname;
-  users[selectIndex].lastname =
-    updatedUser.lastname || users[selectIndex].lastname;
+  if (updatedUser.firstname) {
+    users[selectIndex].firstname = updatedUser.firstname;
+  }
+
+  if (updatedUser.lastname) {
+    users[selectIndex].lastname = updatedUser.lastname;
+  }
 
   res.json({
     user: updatedUser,
