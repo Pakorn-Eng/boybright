@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 8000;
+const mysql = require("mysql2/promise");
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
@@ -9,8 +10,29 @@ let users = [];
 
 let counter = 1;
 
-app.get("/users", (req, res) => {
-  res.json(users);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
+
+app.get("/testdb", (req, res) => {
+  mysql
+    .createConnection({
+      host: "localhost",
+      user: "root",
+      password: "root",
+      database: "tutorial",
+      port: 3306,
+    })
+    .then((connection) => {
+      return connection.query("SELECT * FROM users");
+    })
+    .then(([rows]) => {
+      res.json(rows);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ message: "Database connection failed", error: err.message });
+    });
 });
 
 app.post("/user", (req, res) => {
@@ -59,8 +81,4 @@ app.delete("/user/:id", (req, res) => {
     selectIndex: selectIndex,
     message: "User deleted successfully",
   });
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
 });
