@@ -24,14 +24,15 @@ app.get("/testdb", (req, res) => {
       port: 3306,
     })
     .then((connection) => {
-      return connection.query("SELECT * FROM users");
-    })
-    .then(([rows]) => {
-      res.json(rows);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ message: "Database connection failed", error: err.message });
+      connection
+        .query("SELECT  FROM users")
+        .then((results) => {
+          res.json(results[0]);
+        })
+        .catch((error) => {
+          console.error("Error fetching users:", error.message);
+          res.status(500).json({ error: "Error fetching users" });
+        });
     });
 });
 
