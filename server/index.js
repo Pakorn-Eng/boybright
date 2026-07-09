@@ -37,16 +37,38 @@ app.get("/users", async (req, res) => {
   res.json(results[0]);
 });
 
-app.post("/user", (req, res) => {
-  let user = req.body;
-  user.id = counter;
+app.get("/user/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    const results = await conn.query("SELECT * FROM users WHERE id = ?", [id]);
+    if (results[0].length > 0) {
+      res.json(results[0][0]);
+    } else {
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    console.error("Error message", error.message);
+    res.status(500).json({
+      messsage: "someething went wrong",
+      Error: error.message,
+    });
+  }
+});
 
-  counter += 1;
-  users.push(user);
-  res.json({
-    user: user,
-    message: "User added successfully",
-  });
+app.post("/user", async (req, res) => {
+  try {
+    let user = req.body;
+    const results = await conn.query("INSERT INTO users SET ?", user);
+    console.log("Results:", results[0]);
+    res.json({
+      message: "User created successfully",
+      user: user,
+      results: results[0],
+    });
+  } catch (error) {
+    console.error("Error inserting user into the database:", error.message);
+    res.status(500).json({ error: "Error inserting user into the database" });
+  }
 });
 
 // path put /user/:id
