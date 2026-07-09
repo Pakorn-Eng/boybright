@@ -9,31 +9,32 @@ app.use(bodyParser.json());
 let users = [];
 
 let counter = 1;
+let conn = null;
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+const initMySQL = async () => {
+  conn = await mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "tutorial",
+    port: 3306,
+  });
+};
+
+app.get("/testdb-new", async (req, res) => {
+  try {
+    const results = await conn.query("SELECT * FROM users");
+    res.json(results[0]);
+  } catch (error) {
+    console.error("Error connecting to the database:", error.message);
+    res.status(500).json({ error: "Error connecting to the database" });
+    return;
+  }
 });
 
-app.get("/testdb", (req, res) => {
-  mysql
-    .createConnection({
-      host: "localhost",
-      user: "root",
-      password: "root",
-      database: "tutorial",
-      port: 3306,
-    })
-    .then((connection) => {
-      connection
-        .query("SELECT  FROM users")
-        .then((results) => {
-          res.json(results[0]);
-        })
-        .catch((error) => {
-          console.error("Error fetching users:", error.message);
-          res.status(500).json({ error: "Error fetching users" });
-        });
-    });
+app.get("/users", async (req, res) => {
+  const results = await conn.query("SELECT * FROM users");
+  res.json(results[0]);
 });
 
 app.post("/user", (req, res) => {
@@ -82,4 +83,9 @@ app.delete("/user/:id", (req, res) => {
     selectIndex: selectIndex,
     message: "User deleted successfully",
   });
+});
+
+app.listen(port, async () => {
+  await initMySQL();
+  console.log(`Server is running on http://localhost:${port}`);
 });
