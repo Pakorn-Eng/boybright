@@ -71,6 +71,25 @@ app.post("/user", async (req, res) => {
   }
 });
 
+app.put("/user/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    let updatedUser = req.body;
+    const results = await conn.query("UPDATE users SET ? WHERE id = ?", [
+      updatedUser,
+      id,
+    ]);
+    res.json({
+      message: "User updated successfully",
+      user: updatedUser,
+      results: results[0],
+    });
+  } catch (error) {
+    console.error("Error updating user in the database:", error.message);
+    res.status(500).json({ error: "Error updating user in the database" });
+  }
+});
+
 // path put /user/:id
 app.patch("/user/:id", (req, res) => {
   let id = req.params.id;
@@ -94,17 +113,25 @@ app.patch("/user/:id", (req, res) => {
 });
 
 // path delete /user/:id
-app.delete("/user/:id", (req, res) => {
-  let id = req.params.id;
-  let selectIndex = users.findIndex((user) => user.id == id);
-
-  //delete users[selectIndex]; เปลี่นเป็น splice
-  users.splice(selectIndex, 1);
-
-  res.json({
-    selectIndex: selectIndex,
-    message: "User deleted successfully",
-  });
+app.delete("/user/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    const results = await conn.query("DELETE FROM users WHERE id = ?", [id]);
+    if (results[0].affectedRows == 0) {
+      throw { statusCode: 404, message: "User not found" };
+    } else {
+      res.json({ message: "User deleted successfully", id: id });
+    }
+  } catch (error) {
+    console.error("Error deleting user from the database:", error.message);
+    let statusCode = error.statusCode || 500;
+    res
+      .status(statusCode)
+      .json({
+        message: error.message || "Error deleting user from the database",
+        id: req.params.id,
+      });
+  }
 });
 
 app.listen(port, async () => {
