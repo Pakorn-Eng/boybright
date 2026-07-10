@@ -71,6 +71,25 @@ app.post("/user", async (req, res) => {
   }
 });
 
+app.put("/user/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    let updatedUser = req.body;
+    const results = await conn.query("UPDATE users SET ? WHERE id = ?", [
+      updatedUser,
+      id,
+    ]);
+    res.json({
+      message: "User updated successfully",
+      user: updatedUser,
+      results: results[0],
+    });
+  } catch (error) {
+    console.error("Error updating user in the database:", error.message);
+    res.status(500).json({ error: "Error updating user in the database" });
+  }
+});
+
 // path put /user/:id
 app.patch("/user/:id", (req, res) => {
   let id = req.params.id;
