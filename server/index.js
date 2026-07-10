@@ -41,14 +41,14 @@ app.get("/user/:id", async (req, res) => {
   try {
     let id = req.params.id;
     const results = await conn.query("SELECT * FROM users WHERE id = ?", [id]);
-    if (results[0].length > 0) {
-      res.json(results[0][0]);
-    } else {
-      throw new Error("User not found");
+    if (results[0].length == 0) {
+      throw { statusCode: 404, message: "User not found" };
     }
+    res.json(results[0][0]);
   } catch (error) {
     console.error("Error message", error.message);
-    res.status(500).json({
+    let statusCode = error.statusCode || 500;
+    res.status(statusCode).json({
       messsage: "someething went wrong",
       Error: error.message,
     });
