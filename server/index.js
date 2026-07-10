@@ -113,17 +113,25 @@ app.patch("/user/:id", (req, res) => {
 });
 
 // path delete /user/:id
-app.delete("/user/:id", (req, res) => {
-  let id = req.params.id;
-  let selectIndex = users.findIndex((user) => user.id == id);
-
-  //delete users[selectIndex]; เปลี่นเป็น splice
-  users.splice(selectIndex, 1);
-
-  res.json({
-    selectIndex: selectIndex,
-    message: "User deleted successfully",
-  });
+app.delete("/user/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    const results = await conn.query("DELETE FROM users WHERE id = ?", [id]);
+    if (results[0].affectedRows == 0) {
+      throw { statusCode: 404, message: "User not found" };
+    } else {
+      res.json({ message: "User deleted successfully", id: id });
+    }
+  } catch (error) {
+    console.error("Error deleting user from the database:", error.message);
+    let statusCode = error.statusCode || 500;
+    res
+      .status(statusCode)
+      .json({
+        message: error.message || "Error deleting user from the database",
+        id: req.params.id,
+      });
+  }
 });
 
 app.listen(port, async () => {
